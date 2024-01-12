@@ -186,6 +186,11 @@ public class FooterMilterUtilities {
 			stringBuffer.append("</body>");
 			stringBuffer.append(splitString[1].toString());
 
+			int htmlIdx = stringBuffer.indexOf("</html>");
+			if (htmlIdx != -1) {
+				stringBuffer.insert(htmlIdx + 7, "\r\n");
+			}
+
 		} else {
 			stringBuffer.append(entityTextBody);
 
