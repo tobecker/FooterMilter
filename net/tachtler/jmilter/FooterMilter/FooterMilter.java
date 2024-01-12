@@ -59,7 +59,7 @@ public class FooterMilter {
 		/*
 		 * Read the arguments from command line into the dwuaFileBean.
 		 */
-		FooterMilterInitBean argsBean = new FooterMilterInitBean(null, 0, null, null);
+		FooterMilterInitBean argsBean = new FooterMilterInitBean(null, 0, null, null, null);
 
 		try {
 			argsBean = FooterMilterCLIArgsParser.readArgs(argsBean, args);

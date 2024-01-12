@@ -244,6 +244,7 @@ public class FooterMilterCLIArgsParser {
 		String from = null;
 		HashMap<String, String> mapText = new HashMap<String, String>();
 		HashMap<String, String> mapHtml = new HashMap<String, String>();
+		HashMap<String, String> mapClient = new HashMap<String, String>();
 
 		for (Ini.Section section : iniConfig.values()) {
 
@@ -286,41 +287,53 @@ public class FooterMilterCLIArgsParser {
 					 * If the variable enabled is true the other footer fields will be written to
 					 * the HashMaps. If NOT, the other footer fields will be ignored.
 					 */
-					if (enabled != null) {
-						if (enabled) {
-
-							/*
-							 * Save the from field to the variable from for this iteration.
-							 */
-							if (option.equalsIgnoreCase("from")) {
-								if (!section.fetch(option).isEmpty() && !section.fetch(option).equals("")
-										&& section.fetch(option) != null) {
-									from = section.fetch(option);
-								} else {
-									throw new FooterMilterException(true, "Configuration at section ["
-											+ section.getName() + "] Parameter: from has an empty value!");
-								}
-							}
-
-							/*
-							 * Put the text value with the from field to the HashMap mapText.
-							 */
-							if (option.equalsIgnoreCase("text")) {
-								mapText.put(from, section.fetch(option));
-							}
-
-							/*
-							 * Put the html value with the from field to the HashMap mapHtml.
-							 */
-							if (option.equalsIgnoreCase("html")) {
-								mapHtml.put(from, section.fetch(option));
-							}
-
-						}
-
-					} else {
+					if (enabled == null) 
+					{
 						throw new FooterMilterException(true, "Configuration at section [" + section.getName()
-								+ "] Parameter: enabled is NOT specified!");
+							+ "] Parameter: enabled is NOT specified!");
+					}
+
+					if (!enabled) 
+					{
+						continue;
+					}
+
+					/*
+					* Save the from field to the variable from for this iteration.
+					*/
+					if (option.equalsIgnoreCase("from")) {
+						if (!section.fetch(option).isEmpty() && !section.fetch(option).equals("")
+							&& section.fetch(option) != null) {
+							from = section.fetch(option);
+						} else {
+							throw new FooterMilterException(true, "Configuration at section ["
+									+ section.getName() + "] Parameter: from has an empty value!");
+						}
+					}
+
+					/*
+					* Put the text value with the from field to the HashMap mapText.
+					*/
+					if (option.equalsIgnoreCase("text")) {
+						mapText.put(from, section.fetch(option));
+					}
+
+					/*
+					* Put the html value with the from field to the HashMap mapHtml.
+					*/
+					if (option.equalsIgnoreCase("html")) {
+						mapHtml.put(from, section.fetch(option));
+					}
+
+					/*
+					* Put the from value with the clientname field to the HashMap mapClient.
+					*/
+					if (option.equalsIgnoreCase("clientname")) {
+						if (!section.fetch(option).isEmpty() && !section.fetch(option).equals("")
+							&& section.fetch(option) != null) {
+
+							mapClient.put(section.fetch(option), from);
+						} 
 					}
 				}
 
@@ -335,6 +348,7 @@ public class FooterMilterCLIArgsParser {
 		 */
 		argsBean.setMapText(mapText);
 		argsBean.setMapHtml(mapHtml);
+		argsBean.setMapClient(mapClient);
 
 		log.debug("----------------------------------------: ");
 
@@ -352,6 +366,13 @@ public class FooterMilterCLIArgsParser {
 
 		log.debug("----------------------------------------: ");
 
+		mapClient.forEach((key, value) -> {
+			log.debug("*mapClient (key)                        : " + key);
+			log.debug("*mapClient (value) <Start at next line> : " + System.lineSeparator() + value);
+		});
+
+		log.debug("----------------------------------------: ");
+
 	}
 
 	/**
@@ -362,7 +383,7 @@ public class FooterMilterCLIArgsParser {
 	 * @throws FooterMilterException
 	 */
 	private static void footerIsParameterValid(String section, String param) throws FooterMilterException {
-		if (!param.equalsIgnoreCase("enabled") && !param.equalsIgnoreCase("from") && !param.equalsIgnoreCase("text")
+		if (!param.equalsIgnoreCase("enabled") && !param.equalsIgnoreCase("from") && !param.equalsIgnoreCase("clientname") && !param.equalsIgnoreCase("text")
 				&& !param.equalsIgnoreCase("html")) {
 			throw new FooterMilterException(true, "Configuration at section [" + section + "] Parameter: " + param
 					+ " is not a valid parameter! (Possible parameters are: enabled, from, text, html) ONLY!");

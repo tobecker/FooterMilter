@@ -93,7 +93,7 @@ public class FooterMilterHandler extends AbstractMilterHandler {
 	private StringBuffer bodyContent = new StringBuffer();
 	private ContentTypeField contentTypeField = null;
 
-	private FooterMilterInitBean argsBean = new FooterMilterInitBean(null, 0, null, null);
+	private FooterMilterInitBean argsBean = new FooterMilterInitBean(null, 0, null, null, null);
 
 	byte[] bodyModified = null;
 
@@ -809,6 +809,7 @@ public class FooterMilterHandler extends AbstractMilterHandler {
 		 * the footerAvailiableResult with false as "standard" values.
 		 */
 		mailFrom = context.getMacros(CommandProcessor.SMFIC_MAIL).get("{mail_addr}").toString();
+		String mailClientName = context.getMacros(CommandProcessor.SMFIC_MAIL).get("{client_name}").toString();
 		footerAvailableResult = false;
 
 		log.debug("*mailFrom                        (init) : " + mailFrom);
@@ -816,6 +817,11 @@ public class FooterMilterHandler extends AbstractMilterHandler {
 
 		if (argsBean.getMapText().containsKey(mailFrom) || argsBean.getMapHtml().containsKey(mailFrom)) {
 			footerAvailableResult = true;
+		} else if(argsBean.getMapClient().containsKey(mailClientName)) { 
+
+			mailFrom = argsBean.getMapClient().get(mailClientName);
+			footerAvailableResult = true;
+
 		} else {
 
 			/*
@@ -872,6 +878,7 @@ public class FooterMilterHandler extends AbstractMilterHandler {
 		}
 
 		log.debug("*mailFrom                        (done) : " + mailFrom);
+		log.debug("*mailClientName                  (done) : " + mailClientName);
 		log.debug("*footerAvailableResult           (done) : " + footerAvailableResult);
 
 	}

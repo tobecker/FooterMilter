@@ -53,15 +53,21 @@ public class FooterMilterInitBean {
 	private HashMap<String, String> mapHtml = new HashMap<String, String>();
 
 	/**
+	 * Return HashMap with client name as key and mail from as value pair.
+	 */
+	private HashMap<String, String> mapClient = new HashMap<String, String>();
+
+	/**
 	 * Constructor.
 	 */
 	public FooterMilterInitBean(InetAddress inetAddress, int port, HashMap<String, String> mapText,
-			HashMap<String, String> mapHtml) {
+			HashMap<String, String> mapHtml, HashMap<String, String> mapClient) {
 		super();
 		this.inetAddress = inetAddress;
 		this.port = port;
 		this.mapText.clear();
 		this.mapHtml.clear();
+		this.mapClient.clear();
 	}
 
 	/**
@@ -133,6 +139,20 @@ public class FooterMilterInitBean {
 	 */
 	public void setMapHtml(HashMap<String, String> mapHtml) {
 		this.mapHtml = mapHtml;
+	}
+
+	/**
+	 * @return the mapClient
+	 */
+	public HashMap<String, String> getMapClient() {
+		return mapClient;
+	}
+
+	/**
+	 * @param mapClient the mapClient to set
+	 */
+	public void setMapClient(HashMap<String, String> mapClient) {
+		this.mapClient = mapClient;
 	}
 
 }
